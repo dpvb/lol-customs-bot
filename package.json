@@ -4,7 +4,8 @@
     "description": "discord bot boilerplate",
     "main": "main.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+      "dev": "node main.js",
+      "deploy-commands": "node deploy-commands.js"
     },
     "author": "",
     "license": "ISC",
