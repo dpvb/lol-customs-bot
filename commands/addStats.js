@@ -31,7 +31,7 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         const member = interaction.member;
-        if (!member.roles.cache.some(role => role.name === 'admin')) {
+        if (!member.roles.cache.some(role => role.name === 'ADMIN')) {
             return await interaction.reply({ content: 'You do not have permission to perform this command!', ephemeral: true });
         }
 
