@@ -14,10 +14,11 @@ module.exports = {
         try {
             const data = await fetchStats(username);
 
-            const winrate = ((data.stats.wins / (data.stats.wins + data.stats.losses)) * 100).toFixed(2);
+            let winrate = 0;
+            if (data.stats.wins + data.stats.losses > 0) winrate = ((data.stats.wins / (data.stats.wins + data.stats.losses)) * 100).toFixed(2);
 
             const statsEmbed = {
-                color: 0x0099ff,
+                color: 0x00ffff,
                 title: `${username}'s Stats`,
                 description: 'View all of your stats!',
                 fields: [
