@@ -6,7 +6,7 @@ module.exports = {
     once: true,
     async execute(client) {
         await updateLeaderboard(client);
-        setInterval(() => updateLeaderboard(client), 36000000);
+        setInterval(() => updateLeaderboard(client), 3600000);
     },
 };
 
