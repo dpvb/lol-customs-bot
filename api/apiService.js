@@ -8,6 +8,16 @@ async function fetchStats(username) {
     return data;
 }
 
+async function allStats() {
+    const URL = 'http://dylanpi:4545/api/user/all';
+    const response = await fetch(URL);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
+
 async function addStats(username, stats) {
     const payload = {
         username,
@@ -50,4 +60,5 @@ module.exports = {
     fetchStats,
     addStats,
     addPlayer,
+    allStats,
 };
