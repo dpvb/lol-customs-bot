@@ -21,11 +21,13 @@ async function updateLeaderboard(client) {
         const rank = index + 1;
         const playerName = player.username.split('#')[0];
         const wins = player.stats.wins;
+        const losses = player.stats.losses;
         const kills = player.stats.kills;
         const deaths = player.stats.deaths;
         const assists = player.stats.assists;
         // return `${rank}) \`${playerName}\` >> **${wins}** Wins **${kills}** Kills **${deaths}** Deaths **${assists}** Assists`;
-        return `**${rank}) ${playerName}** - ${wins} Wins :trophy:  ${kills} Kills :dagger: ${deaths} Deaths :skull:  ${assists} Assists :crossed_swords:`;
+        // return `**${rank}) ${playerName}**: ${wins} Wins :trophy: ${losses} Losses :flag_white: ${kills} Kills :dagger: ${deaths} Deaths :skull:  ${assists} Assists :crossed_swords:`;
+        return `**${rank}) ${playerName}**: \`${wins}W/${losses}L\` ${kills} Kills :dagger: ${deaths} Deaths :skull:  ${assists} Assists :crossed_swords:`;
     }).join('\n');
 
     const embed = {
