@@ -15,34 +15,59 @@ async function updateLeaderboard(client) {
 
     const stats = await allStats();
 
-    const sorted = stats.sort((a, b) => b.stats.wins - a.stats.wins).slice(0, 25);
+    stats.forEach(player => {
+        player.stats.eliminations = player.stats.kills + player.stats.assists;
+    });
 
-    const text = sorted.map((player, index) => {
-        const rank = index + 1;
-        const playerName = player.username.split('#')[0];
-        const wins = player.stats.wins;
-        // return `${rank}) \`${playerName}\` >> **${wins}** Wins **${kills}** Kills **${deaths}** Deaths **${assists}** Assists`;
-        // return `**${rank}) ${playerName}**: ${wins} Wins :trophy: ${losses} Losses :flag_white: ${kills} Kills :dagger: ${deaths} Deaths :skull:  ${assists} Assists :crossed_swords:`;
-        // return `**${rank}) ${playerName}**: \`${wins}W/${losses}L\` ${kills} Kills :dagger: ${deaths} Deaths :skull:  ${assists} Assists :crossed_swords:`;
-        return `**${rank}) ${playerName}**: ${wins} :trophy:`
-    }).join('\n');
+    const sortedByWins = [...stats].sort((a, b) => b.stats.wins - a.stats.wins).slice(0, 25);
+    const sortedByEliminations = [...stats].sort((a, b) => b.stats.eliminations - a.stats.eliminations).slice(0, 25);
 
-    const embed = {
-        title: 'Top Wins',
+    const winsText = sortedByWins.map(formatPlayerWins).join('\n');
+    const eliminationsText = sortedByEliminations.map(formatPlayerEliminations).join('\n');
+    
+    const winsEmbed = createEmbed('Top Wins', winsText);
+    const eliminationsEmbed = createEmbed('Top Eliminations', eliminationsText);
+
+    channel.messages.fetch({ limit: 2 }).then(messages => {
+        const winsMessage = messages.last();
+        const elimsMessage = messages.first();
+
+        // If the last message is the wins leaderboard, edit it. If not, send a new message.
+        if (winsMessage && winsMessage.embeds[0] && winsMessage.embeds[0].title === 'Top Wins') {
+            winsMessage.edit({ embeds: [winsEmbed] });
+        } else {
+            channel.send({ embeds: [winsEmbed] });
+        }
+
+        // If the second last message is the eliminations leaderboard, edit it. If not, send a new message.
+        if (elimsMessage && elimsMessage.embeds[0] && elimsMessage.embeds[0].title === 'Top Eliminations') {
+            elimsMessage.edit({ embeds: [eliminationsEmbed] });
+        } else {
+            channel.send({ embeds: [eliminationsEmbed] });
+        }
+    });
+}
+
+function formatPlayerWins(player, index) {
+    const rank = index + 1;
+    const playerName = player.username.split('#')[0];
+    const wins = player.stats.wins;
+    return `**${rank}) ${playerName}**: ${wins} :trophy:`
+}
+
+function formatPlayerEliminations(player, index) {
+    const rank = index + 1;
+    const playerName = player.username.split('#')[0];
+    const eliminations = player.stats.eliminations;
+    return `**${rank}) ${playerName}**: ${eliminations} :crossed_swords:`
+}
+
+function createEmbed(title, desc) {
+    return {
+        title: title,
         color: 0x0099ff,
-        description: text,
+        description: desc,
         fields: [],
         timestamp: new Date().toISOString(),
     };
-
-
-    channel.messages.fetch({ limit: 1 }).then(messages => {
-        const message = messages.first();
-
-        if (message) {
-            message.edit({ embeds: [embed] });
-        } else {
-            channel.send({ embeds: [embed] });
-        }
-    });
 }
