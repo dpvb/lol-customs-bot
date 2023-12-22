@@ -15,7 +15,7 @@ async function updateLeaderboard(client) {
 
     const stats = await allStats();
 
-    const sorted = stats.sort((a, b) => b.stats.wins - a.stats.wins);
+    const sorted = stats.sort((a, b) => b.stats.wins - a.stats.wins).slice(0, 25);
 
     const text = sorted.map((player, index) => {
         const rank = index + 1;
