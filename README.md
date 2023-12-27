@@ -1,3 +1,3 @@
-# Discord Bot Boilerplate
+# LOL Customs Bot
 
-This project is a Discord Bot Boilerplate for JS.
+This is a Discord bot I created for my League of Legends Custom Game server.
